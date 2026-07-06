@@ -1,3 +1,6 @@
+// NB: this is the Retroshades CLI. `deploy` and `gen-key` use current endpoints.
+// The `query`, `contracts`, and `list` subcommands still point at older endpoint paths
+// that were since renamed (see the NB notes on each), so they need updating.
 // main.rs
 use clap::{Parser, Subcommand};
 use serde::{Deserialize, Serialize};
@@ -95,6 +98,7 @@ async fn main() -> anyhow::Result<()> {
             let body = json!({ "query": sql });
             post_json_value(
                 &client,
+                // NB: stale -- endpoint renamed to /retroshade/query; this path no longer exists.
                 &format!("{}/retroshadesv1", trim(&cli.base_url)),
                 auth(&cli.jwt),
                 &body,
@@ -108,6 +112,7 @@ async fn main() -> anyhow::Result<()> {
             };
             post_json(
                 &client,
+                // NB: stale -- endpoint renamed to /retroshade/append-contracts (request body shape also changed).
                 &format!("{}/retroshades/contracts", trim(&cli.base_url)),
                 auth(&cli.jwt),
                 &body,
@@ -117,6 +122,7 @@ async fn main() -> anyhow::Result<()> {
         Cmd::List => {
             get_json(
                 &client,
+                // NB: stale -- endpoint renamed to /retroshade/list (and /retroshade/tables).
                 &format!("{}/retroshades", trim(&cli.base_url)),
                 auth(&cli.jwt),
             )
